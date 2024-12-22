@@ -1,6 +1,6 @@
 # 🌟 160 Days of DSA Challenge 🚀  
 
-Welcome to the **160 Days of DSA Challenge**, your roadmap to mastering **Data Structures and Algorithms** through consistent practice and in-depth problem-solving. This repository is designed to help you strengthen your DSA foundation, improve coding skills, and ace technical interviews.
+Welcome to the **160 Days of DSA Challenge**, My roadmap to mastering **Data Structures and Algorithms** through consistent practice and in-depth problem-solving. This repository is designed to help you strengthen your DSA foundation, improve coding skills, and ace technical interviews.
 
 ---
 ## 🌟 Challenge Highlights  
@@ -8,8 +8,8 @@ Welcome to the **160 Days of DSA Challenge**, your roadmap to mastering **Data S
 ✅ **Daily Problems:** Solve one problem every day for 160 days.  
 ✅ **Comprehensive Solutions:** Detailed explanations with multiple approaches.  
 ✅ **Diverse Topics:** From basics to advanced topics like trees, graphs, DP, and more.  
-✅ **Multi-Language Support:** Solutions available in **C++**, **Python**, and **Java**.  
-✅ **Coding Platforms:** Problems sourced from **LeetCode**, **Codeforces**, **GeeksforGeeks**, and more.  
+✅ **Multi-Language Support:** Solutions available in  **Python**, and **Java**.  
+✅ **Coding Platforms:** Problems sourced from  **GeeksforGeeks**.  
 
 ---
 
