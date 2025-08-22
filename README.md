@@ -15,10 +15,10 @@ Welcome to the **160 Days of DSA Challenge**, My roadmap to mastering **Data Str
 
 ## 🛠️ Tech Stack  
 
-- **Languages:**  
-  ![Python](https://img.shields.io/badge/Python-blue?style=flat-square&logo=python)  
-  ![Java](https://img.shields.io/badge/Java-red?style=flat-square&logo=java)  
-
+- **Languages:**
+  
+  ![C++](https://img.shields.io/badge/C++-orange?style=flat-square&logo=c++)  
+  ![Python](https://img.shields.io/badge/Python-red?style=flat-square&logo=python)  
 ---
 
 
