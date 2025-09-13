@@ -1,0 +1,32 @@
+# 3541. Find Most Frequent Vowel and Consonant
+
+class Solution {
+public:
+    int maxFreqSum(string s) {
+        // Frequency arrays for vowels and consonants
+        int vowelFreq[26] = {0};
+        int consonantFreq[26] = {0};
+        
+        // Define the vowels
+        string vowels = "aeiou";
+        
+        // Count the frequencies
+        for(char ch : s) {
+            if(vowels.find(ch) != string::npos) {
+                vowelFreq[ch - 'a']++;
+            } else {
+                consonantFreq[ch - 'a']++;
+            }
+        }
+        
+        // Find the maximum frequency in vowels and consonants
+        int maxVowel = 0, maxConsonant = 0;
+        for(int i = 0; i < 26; i++) {
+            maxVowel = max(maxVowel, vowelFreq[i]);
+            maxConsonant = max(maxConsonant, consonantFreq[i]);
+        }
+        
+        // Return the sum of the maximum frequencies
+        return maxVowel + maxConsonant;
+    }
+};
