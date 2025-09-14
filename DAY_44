@@ -1,0 +1,43 @@
+966. Vowel Spellchecker 
+
+class Solution {
+public:
+    vector<string> spellchecker(vector<string>& wordlist, vector<string>& queries) {
+        unordered_set<string> exact;
+        unordered_map<string, string> lower;
+        unordered_map<string, string> vowel;
+        
+        for (const string &word : wordlist) {
+            exact.insert(word);
+            string lw = word;
+            transform(lw.begin(), lw.end(), lw.begin(), ::tolower);
+            if (!lower.count(lw)) lower[lw] = word;
+            
+            string vw = lw;
+            for (char &c : vw) if (c=='a'||c=='e'||c=='i'||c=='o'||c=='u') c='*';
+            if (!vowel.count(vw)) vowel[vw] = word;
+        }
+        
+        vector<string> res;
+        for (string q : queries) {
+            if (exact.count(q)) {
+                res.push_back(q);
+                continue;
+            }
+            
+            string lq = q;
+            transform(lq.begin(), lq.end(), lq.begin(), ::tolower);
+            if (lower.count(lq)) {
+                res.push_back(lower[lq]);
+                continue;
+            }
+            
+            string vq = lq;
+            for (char &c : vq) if (c=='a'||c=='e'||c=='i'||c=='o'||c=='u') c='*';
+            if (vowel.count(vq)) res.push_back(vowel[vq]);
+            else res.push_back("");
+        }
+        
+        return res;
+    }
+};
