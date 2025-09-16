@@ -1,0 +1,42 @@
+# 2197. Replace Non-Coprime Numbers in Array
+
+import java.util.*;
+
+class Solution {
+    public List<Integer> replaceNonCoprimes(int[] nums) {
+        Stack<Integer> stack = new Stack<>();
+        
+        for (int num : nums) {
+            while (!stack.isEmpty()) {
+                int top = stack.peek();
+                int gcd = gcd(top, num);
+                
+                if (gcd == 1) {
+                    break; // They are coprime, stop merging
+                }
+                
+                // Merge them by calculating LCM
+                num = lcm(top, num);
+                stack.pop(); // Remove the top and continue checking
+            }
+            stack.push(num);
+        }
+        
+        return new ArrayList<>(stack);
+    }
+    
+    // Calculate GCD using Euclidean algorithm
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int rem = a % b;
+            a = b;
+            b = rem;
+        }
+        return a;
+    }
+    
+    // Calculate LCM using GCD
+    private int lcm(int a, int b) {
+        return a / gcd(a, b) * b;
+    }
+}
