@@ -1,0 +1,57 @@
+#1912. Design Movie Rental System
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class MovieRentingSystem {
+private:
+    // Maps movie -> set of {price, shop} for unrented copies
+    unordered_map<int, set<pair<int,int>>> available;
+    
+    // Set of rented movies sorted by {price, shop, movie}
+    set<tuple<int,int,int>> rented;
+    
+    // Map to store the price of each (shop, movie) pair
+    unordered_map<int, unordered_map<int,int>> priceMap;
+
+public:
+    MovieRentingSystem(int n, vector<vector<int>>& entries) {
+        for(auto &e : entries){
+            int shop = e[0], movie = e[1], price = e[2];
+            available[movie].insert({price, shop});
+            priceMap[shop][movie] = price;
+        }
+    }
+    
+    vector<int> search(int movie) {
+        vector<int> res;
+        if(available.count(movie)){
+            for(auto &[price, shop] : available[movie]){
+                res.push_back(shop);
+                if(res.size() == 5) break;
+            }
+        }
+        return res;
+    }
+    
+    void rent(int shop, int movie) {
+        int price = priceMap[shop][movie];
+        available[movie].erase({price, shop});
+        rented.insert({price, shop, movie});
+    }
+    
+    void drop(int shop, int movie) {
+        int price = priceMap[shop][movie];
+        rented.erase({price, shop, movie});
+        available[movie].insert({price, shop});
+    }
+    
+    vector<vector<int>> report() {
+        vector<vector<int>> res;
+        for(auto &[price, shop, movie] : rented){
+            res.push_back({shop, movie});
+            if(res.size() == 5) break;
+        }
+        return res;
+    }
+};
