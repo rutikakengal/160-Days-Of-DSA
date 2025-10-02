@@ -1,0 +1,25 @@
+3100. Water Bottles II
+
+class Solution {
+public:
+    int maxBottlesDrunk(int numBottles, int numExchange) {
+        int full = numBottles;
+        int empty = 0;
+        int drank = 0;
+        int exchange = numExchange;
+
+        while (full > 0) {
+            drank += full;
+            empty += full;
+            full = 0;
+
+            if (empty >= exchange) {
+                full = 1;  // Can only exchange once per operation
+                empty -= exchange;
+                exchange++; // Increase exchange value
+            }
+        }
+
+        return drank;
+    }
+};
