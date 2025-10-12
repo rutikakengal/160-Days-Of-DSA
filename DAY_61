@@ -1,0 +1,104 @@
+# 3539. Find Sum of Array Product of Magical Sequences
+
+#include <bits/stdc++.h>
+using namespace std;
+
+const long long MOD = 1000000007;
+
+long long modpow(long long a, long long e){
+    long long r = 1;
+    while(e){
+        if(e & 1) r = (r * a) % MOD;
+        a = (a * a) % MOD;
+        e >>= 1;
+    }
+    return r;
+}
+
+long long modinv(long long a){
+    // MOD is prime
+    return modpow(a, MOD - 2);
+}
+
+class Solution {
+public:
+    int magicalSum(int m, int k, vector<int>& nums) {
+        int n = nums.size();
+        // Prepare combinatorics up to m
+        vector<long long> fact(m+1,1), invfact(m+1,1);
+        for(int i=1;i<=m;i++) fact[i] = fact[i-1]*i % MOD;
+        invfact[m] = modinv(fact[m]);
+        for(int i=m-1;i>=0;i--) invfact[i] = invfact[i+1]*(i+1) % MOD;
+        auto C = [&](int a,int b)-> long long {
+            if(b<0 || b> a) return 0;
+            return fact[a] * invfact[b] % MOD * invfact[a-b] % MOD;
+        };
+
+        // Precompute powNums[i][t] = nums[i]^t % MOD for t=0..m
+        vector<vector<long long>> powNums(n, vector<long long>(m+1,1));
+        for(int i=0;i<n;i++){
+            for(int t=1;t<=m;t++){
+                powNums[i][t] = powNums[i][t-1] * (nums[i] % MOD) % MOD;
+            }
+        }
+
+        // dp[assigned][carry][ones] -> value
+        // we'll keep two layers for indices to save memory: cur and nxt
+        // sizes: assigned 0..m, carry 0..m, ones 0..m
+        int M = m;
+        int A = m+1;
+        int B = m+1;
+        int O = m+1;
+
+        // initialize current dp as 3D zero
+        // to save memory, store as vector of size (A * B * O)
+        auto idx = [&](int a,int b,int o){ return (a * B + b) * O + o; };
+        vector<long long> cur(A * B * O, 0), nxt(A * B * O, 0);
+        cur[idx(0,0,0)] = 1; // no picks assigned, no carry, zero ones, value 1
+
+        for(int i=0;i<n;i++){
+            fill(nxt.begin(), nxt.end(), 0);
+            for(int assigned=0; assigned<=M; ++assigned){
+                for(int carry=0; carry<=M; ++carry){
+                    for(int ones=0; ones<=M; ++ones){
+                        long long curVal = cur[idx(assigned, carry, ones)];
+                        if(curVal == 0) continue;
+                        int remain = M - assigned;
+                        // choose t picks to assign to index i
+                        for(int t=0; t<=remain; ++t){
+                            int newAssigned = assigned + t;
+                            int s = carry + t;
+                            int bit = s & 1;
+                            int newCarry = s >> 1;
+                            int newOnes = ones + bit;
+                            if(newCarry > M) continue; // carry bounds
+                            long long ways = C(remain, t);
+                            long long mul = ways * powNums[i][t] % MOD;
+                            long long add = curVal * mul % MOD;
+                            long long &cell = nxt[idx(newAssigned, newCarry, newOnes)];
+                            cell += add;
+                            if(cell >= MOD) cell -= MOD;
+                        }
+                    }
+                }
+            }
+            cur.swap(nxt);
+        }
+
+        // After processing all indices, consider states with assigned == m
+        long long ans = 0;
+        for(int carry=0; carry<=M; ++carry){
+            for(int ones=0; ones<=M; ++ones){
+                long long val = cur[idx(M, carry, ones)];
+                if(val == 0) continue;
+                int finalOnes = ones + __builtin_popcount((unsigned)carry);
+                if(finalOnes == k){
+                    ans += val;
+                    if(ans >= MOD) ans -= MOD;
+                }
+            }
+        }
+
+        return (int)ans;
+    }
+};
