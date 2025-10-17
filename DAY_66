@@ -1,0 +1,50 @@
+# 3003. Maximize the Number of Partitions After Operations
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string s;
+    int n, k;
+    unordered_map<long long, int> memo;
+
+    int dfs(int i, int mask, bool changed) {
+        if (i == n) return 1;
+
+        long long key = ((long long)i << 27) | ((long long)mask << 1) | changed;
+        if (memo.count(key)) return memo[key];
+
+        int res = 0;
+        int c = s[i] - 'a';
+        int currMask = mask | (1 << c);
+        int cnt = __builtin_popcount(currMask);
+
+        if (cnt <= k)
+            res = dfs(i + 1, currMask, changed);
+        else
+            res = 1 + dfs(i + 1, 1 << c, changed);
+
+        if (!changed) {
+            for (int nc = 0; nc < 26; ++nc) {
+                if (nc == c) continue;
+                int newMask = mask | (1 << nc);
+                int newCnt = __builtin_popcount(newMask);
+                if (newCnt <= k)
+                    res = max(res, dfs(i + 1, newMask, true));
+                else
+                    res = max(res, 1 + dfs(i + 1, 1 << nc, true));
+            }
+        }
+
+        return memo[key] = res;
+    }
+
+    int maxPartitionsAfterOperations(string s_, int k_) {
+        s = s_;
+        n = s.size();
+        k = k_;
+        memo.clear();
+        return dfs(0, 0, false);
+    }
+};
