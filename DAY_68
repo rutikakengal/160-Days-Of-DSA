@@ -1,0 +1,29 @@
+# 1625. Lexicographically Smallest String After Applying Operations
+
+  class Solution {
+public:
+    string findLexSmallestString(string s, int a, int b) {
+        unordered_set<string> seen;
+        queue<string> q;
+        q.push(s);
+        string ans = s;
+
+        while (!q.empty()) {
+            string cur = q.front();
+            q.pop();
+            if (seen.count(cur)) continue;
+            seen.insert(cur);
+            ans = min(ans, cur);
+
+            string added = cur;
+            for (int i = 1; i < added.size(); i += 2) {
+                added[i] = (added[i] - '0' + a) % 10 + '0';
+            }
+            if (!seen.count(added)) q.push(added);
+
+            string rotated = cur.substr(cur.size() - b) + cur.substr(0, cur.size() - b);
+            if (!seen.count(rotated)) q.push(rotated);
+        }
+        return ans;
+    }
+};
