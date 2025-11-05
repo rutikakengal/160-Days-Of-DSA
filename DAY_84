@@ -1,0 +1,92 @@
+# 3321. Find X-Sum of All K-Long Subarrays II
+
+class Solution {
+public:
+    vector<long long> findXSum(vector<int>& nums, int k, int x) {
+        unordered_map<int,long long> freq;
+        struct Cmp {
+            unordered_map<int,long long>* f;
+            bool operator()(int a,int b) const {
+                if((*f)[a]!=(*f)[b]) return (*f)[a]>(*f)[b];
+                return a>b;
+            }
+        };
+        
+        Cmp cmp{&freq};
+        set<int, Cmp> top(cmp), rest(cmp);
+        long long sumTop=0;
+        
+        auto addVal=[&](int v){
+            long long old=freq[v];
+            if(old>0){
+                if(top.count(v)){
+                    top.erase(v);
+                    sumTop-=old*v;
+                }
+                else rest.erase(v);
+            }
+            freq[v]++;
+            long long now=freq[v];
+            rest.insert(v);
+        };
+        
+        auto removeVal=[&](int v){
+            long long old=freq[v];
+            if(top.count(v)){
+                top.erase(v);
+                sumTop-=old*v;
+            } else rest.erase(v);
+            freq[v]--;
+            long long now=freq[v];
+            if(now>0) rest.insert(v);
+        };
+        
+        auto rebalance=[&](){
+            while((int)top.size()<x && !rest.empty()){
+                int v=*rest.begin();
+                rest.erase(v);
+                top.insert(v);
+                sumTop+=freq[v]*v;
+            }
+            while((int)top.size()>x){
+                auto it=prev(top.end());
+                int v=*it;
+                top.erase(it);
+                sumTop-=freq[v]*v;
+                rest.insert(v);
+            }
+            if(top.size()==x && !top.empty() && !rest.empty()){
+                while(true){
+                    int worstTop=*prev(top.end());
+                    int bestRest=*rest.begin();
+                    if(freq[bestRest]>freq[worstTop] || 
+                       (freq[bestRest]==freq[worstTop] && bestRest>worstTop)){
+                        top.erase(worstTop);
+                        sumTop-=freq[worstTop]*worstTop;
+                        rest.insert(worstTop);
+                        
+                        rest.erase(bestRest);
+                        top.insert(bestRest);
+                        sumTop+=freq[bestRest]*bestRest;
+                    } else break;
+                }
+            }
+        };
+        
+        vector<long long> ans;
+        for(int i=0;i<k;i++){
+            addVal(nums[i]);
+        }
+        rebalance();
+        ans.push_back(sumTop);
+        
+        for(int i=k;i<nums.size();i++){
+            addVal(nums[i]);
+            removeVal(nums[i-k]);
+            rebalance();
+            ans.push_back(sumTop);
+        }
+        
+        return ans;
+    }
+};
