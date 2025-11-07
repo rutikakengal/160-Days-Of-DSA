@@ -1,0 +1,49 @@
+# 2528. Maximize the Minimum Powered City
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    long long maxPower(vector<int>& stations, int r, int k) {
+        int n = stations.size();
+        long long left = 0, right = 1e15; // large upper bound
+        long long ans = 0;
+
+        auto isPossible = [&](long long target) {
+            vector<long long> add(n, 0);
+            long long currAdd = 0;
+            long long used = 0;
+            long long window = 0;
+
+            // Initial window sum
+            for(int i = 0; i <= min(n-1, r); i++) window += stations[i];
+
+            for(int i = 0; i < n; i++) {
+                if(i > r) window -= stations[i - r - 1] + add[i - r - 1];
+                if(i + r < n && i != 0) window += stations[i + r] + add[i + r];
+
+                long long need = target - window;
+                if(need > 0) {
+                    used += need;
+                    if(used > k) return false;
+                    add[min(n-1, i + r)] += need;
+                    window += need;
+                }
+            }
+            return true;
+        };
+
+        while(left <= right) {
+            long long mid = left + (right - left)/2;
+            if(isPossible(mid)) {
+                ans = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return ans;
+    }
+};
