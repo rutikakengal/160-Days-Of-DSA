@@ -1,0 +1,12 @@
+# 1611. Minimum One Bit Operations to Make Integers Zero
+
+class Solution {
+public:
+    int minimumOneBitOperations(int n) {
+        if(n == 0) return 0;
+        int k = 31 - __builtin_clz(n); // highest set bit index
+        int p = 1 << k;
+        int full = (1 << (k + 1)) - 1;
+        return full - minimumOneBitOperations(n - p);
+    }
+};
