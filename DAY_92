@@ -1,0 +1,35 @@
+# 2654. Minimum Number of Operations to Make All Array Elements
+
+class Solution {
+public:
+    int minOperations(vector<int>& nums) {
+        int n = nums.size();
+        int ones = 0;
+        
+        // Count number of 1's
+        for (int x : nums) if (x == 1) ones++;
+        
+        // If there are already 1's, we need (n - ones) operations
+        if (ones > 0) return n - ones;
+        
+        int ans = INT_MAX;
+        
+        // Find shortest subarray with gcd = 1
+        for (int i = 0; i < n; i++) {
+            int g = nums[i];
+            for (int j = i; j < n; j++) {
+                g = gcd(g, nums[j]);
+                if (g == 1) {
+                    ans = min(ans, j - i + 1);
+                    break;
+                }
+            }
+        }
+        
+        // If no subarray has gcd = 1, impossible
+        if (ans == INT_MAX) return -1;
+        
+        // Total operations = (ans - 1) to create one '1' + (n - 1) to spread it
+        return (ans - 1) + (n - 1);
+    }
+};
