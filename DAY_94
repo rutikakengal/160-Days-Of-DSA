@@ -1,0 +1,83 @@
+# 3234. Count the Number of Substrings With Dominant Ones
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        int n = s.size();
+        const int B = 200; // cutoff ~ sqrt(4e4)
+
+        // positions of zeros with sentinels at -1 and n
+        vector<int> pos;
+        pos.push_back(-1);
+        for (int i = 0; i < n; ++i) if (s[i] == '0') pos.push_back(i);
+        pos.push_back(n);
+
+        int zeroCount = (int)pos.size() - 2; // number of zeros in s
+        long long ans = 0;
+
+        // Case z = 0: substrings consisting only of ones
+        for (int i = 1; i < (int)pos.size(); ++i) {
+            long long len = pos[i] - pos[i-1] - 1;
+            ans += len * (len + 1) / 2;
+        }
+
+        // Case 1 <= z <= B
+        for (int z = 1; z <= B && z <= zeroCount; ++z) {
+            long long need = 1LL * z * z + z; // minimal length required
+            // iterate over blocks of z zeros: zeros at pos[a] .. pos[b] where b = a+z-1
+            for (int a = 1; a + z - 1 <= zeroCount; ++a) {
+                int b = a + z - 1;
+                long long L = pos[a] - pos[a - 1];     // number of choices for left boundary (offsets 0..L-1)
+                long long R = pos[b + 1] - pos[b];     // number of choices for right boundary (offsets 0..R-1)
+                long long baseLen = pos[b] - pos[a] + 1; // length covering the z zeros without extensions
+
+                long long t = need - baseLen; // need l_off + r_off >= t
+                if (t <= 0) {
+                    // every (left, right) pair is valid
+                    ans += L * R;
+                    continue;
+                }
+
+                // maximum possible sum of offsets is (L-1)+(R-1) = L+R-2
+                if (t > (L + R - 2)) continue; // impossible to reach
+
+                // Count pairs (l_off, r_off) with 0 <= l_off < L, 0 <= r_off < R and l_off + r_off >= t
+                // = totalPairs - count_pairs_with_sum <= T where T = t-1
+                long long totalPairs = L * R;
+                long long T = t - 1;
+
+                // Count pairs with l_off + r_off <= T
+                // For l from 0..min(L-1, T): add min(R, T - l + 1)
+                long long cnt_le = 0;
+                long long maxL = min(L - 1, T);
+                if (maxL >= 0) {
+                    // split where T - l + 1 >= R  => l <= T - R + 1
+                    long long fullL = T - (R - 1); // last l where min(...) == R
+                    if (fullL < 0) fullL = -1; // none
+                    // number of l where we add full R:
+                    long long upto = min(maxL, fullL);
+                    if (upto >= 0) {
+                        cnt_le += (upto + 1) * R; // l = 0..upto inclusive
+                    }
+                    // remaining l in [max(upto+1,0) .. maxL] contribute (T - l + 1)
+                    long long Lstart = max(0LL, upto + 1);
+                    if (Lstart <= maxL) {
+                        long long cntL = (maxL - Lstart + 1);
+                        // arithmetic series of values: first = T - Lstart + 1, last = T - maxL + 1
+                        long long first = T - Lstart + 1;
+                        long long last  = T - maxL + 1;
+                        cnt_le += (first + last) * cntL / 2;
+                    }
+                }
+
+                if (cnt_le > totalPairs) cnt_le = totalPairs;
+                ans += (totalPairs - cnt_le);
+            }
+        }
+
+        return (int)ans;
+    }
+};
