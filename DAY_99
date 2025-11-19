@@ -1,5 +1,11 @@
 # 2154. Keep Multiplying Found Values by Two
 
+Explanation-->
+Convert nums into an unordered_set s for O(1) lookup.
+While original exists in the set, multiply it by 2.
+When original is not in the set, return it.
+
+Code -->
 class Solution {
 public:
     int findFinalValue(vector<int>& nums, int original) {
