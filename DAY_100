@@ -1,0 +1,36 @@
+# 757. Set Intersection Size At Least Two
+
+class Solution {
+public:
+    int intersectionSizeTwo(vector<vector<int>>& intervals) {
+        sort(intervals.begin(), intervals.end(), [](auto &a, auto &b){
+            if(a[1] == b[1]) return a[0] > b[0];
+            return a[1] < b[1];
+        });
+        
+        vector<int> nums;
+        int last1 = -1, last2 = -1; // last two points in the set
+        
+        for(auto &it : intervals){
+            int start = it[0], end = it[1];
+            int cnt = 0;
+            if(last1 >= start) cnt++;
+            if(last2 >= start) cnt++;
+            
+            if(cnt >= 2) continue; // interval already has 2 points
+            
+            if(cnt == 1){
+                nums.push_back(end);
+                last2 = last1;
+                last1 = end;
+            } else { // cnt == 0
+                nums.push_back(end-1);
+                nums.push_back(end);
+                last2 = end-1;
+                last1 = end;
+            }
+        }
+        
+        return nums.size();
+    }
+};
