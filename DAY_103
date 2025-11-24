@@ -1,4 +1,4 @@
-#
+# 1262. Greatest Sum Divisible by Three
 
 class Solution {
 public:
