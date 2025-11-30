@@ -1,0 +1,32 @@
+# 1590. Make Sum Divisible by P
+
+class Solution {
+public:
+    int minSubarray(vector<int>& nums, int p) {
+        long long total = 0;
+        for (int x : nums) total = (total + x) % p;
+
+        // If total sum already divisible by p → remove empty subarray
+        if (total % p == 0) return 0;
+
+        long long target = total % p;
+        unordered_map<long long, int> mp;
+        mp[0] = -1;  // prefix sum before starting
+
+        long long prefix = 0;
+        int res = nums.size();
+
+        for (int i = 0; i < nums.size(); i++) {
+            prefix = (prefix + nums[i]) % p;
+            long long need = (prefix - target + p) % p;
+
+            if (mp.count(need)) {
+                res = min(res, i - mp[need]);
+            }
+
+            mp[prefix] = i;
+        }
+
+        return res == nums.size() ? -1 : res;
+    }
+};
