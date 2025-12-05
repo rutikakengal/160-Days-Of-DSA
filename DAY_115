@@ -1,5 +1,11 @@
 # 3432. Count Partitions with Even Sum Difference 
 
+✅ Key Insight
+Let:
+L = sum of left part
+R = sum of right part
+We need: (L − R) is even
+
 class Solution {
 public:
     int countPartitions(vector<int>& nums) {
