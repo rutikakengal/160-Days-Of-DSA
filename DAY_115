@@ -10,6 +10,11 @@ Since
 L − R = (L + R) − 2R = total − 2R
 This is even iff total is even (since 2R is always even).
 
+Therefore:
+
+✔️ If total sum is odd → answer = 0
+✔️ If total sum is even → every partition is valid → answer = n − 1
+
 class Solution {
 public:
     int countPartitions(vector<int>& nums) {
