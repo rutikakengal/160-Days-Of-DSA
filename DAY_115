@@ -6,6 +6,10 @@ L = sum of left part
 R = sum of right part
 We need: (L − R) is even
 
+Since
+L − R = (L + R) − 2R = total − 2R
+This is even iff total is even (since 2R is always even).
+
 class Solution {
 public:
     int countPartitions(vector<int>& nums) {
