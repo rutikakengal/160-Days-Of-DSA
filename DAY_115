@@ -1,0 +1,11 @@
+
+
+class Solution {
+public:
+    int countPartitions(vector<int>& nums) {
+        int s = 0, n = nums.size();
+        for (int x : nums) s += x;
+        if (s % 2) return 0;
+        return n - 1;
+    }
+};
