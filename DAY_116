@@ -1,0 +1,37 @@
+# 
+
+class Solution {
+public:
+    int countPartitions(vector<int>& nums, int k) {
+        const int MOD = 1e9 + 7;
+        int n = nums.size();
+
+        vector<long long> dp(n + 1, 0), pref(n + 1, 0);
+        dp[0] = 1;
+        pref[0] = 1;
+
+        deque<int> mx, mn;
+        int l = 0;
+
+        for (int r = 0; r < n; r++) {
+            while (!mx.empty() && nums[mx.back()] <= nums[r]) mx.pop_back();
+            mx.push_back(r);
+
+            while (!mn.empty() && nums[mn.back()] >= nums[r]) mn.pop_back();
+            mn.push_back(r);
+
+            while (nums[mx.front()] - nums[mn.front()] > k) {
+                if (mx.front() == l) mx.pop_front();
+                if (mn.front() == l) mn.pop_front();
+                l++;
+            }
+
+            dp[r + 1] = pref[r] - (l > 0 ? pref[l - 1] : 0);
+            dp[r + 1] = (dp[r + 1] % MOD + MOD) % MOD;
+
+            pref[r + 1] = (pref[r] + dp[r + 1]) % MOD;
+        }
+
+        return dp[n];
+    }
+};
