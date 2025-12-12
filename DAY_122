@@ -1,0 +1,46 @@
+# 3433. Count Mentions Per User
+
+class Solution {
+public:
+    vector<int> countMentions(int numberOfUsers, vector<vector<string>>& events) {
+        vector<int> mentions(numberOfUsers, 0);
+        vector<int> offlineUntil(numberOfUsers, 0);
+        vector<tuple<int,int,string,string>> ev;
+        for (auto &e : events) {
+            int t = stoi(e[1]);
+            int pr = (e[0] == "OFFLINE") ? 0 : 1;
+            ev.push_back({t, pr, e[0], e[2]});
+        }
+        sort(ev.begin(), ev.end(), [](auto &a, auto &b){
+            if (get<0>(a) != get<0>(b)) return get<0>(a) < get<0>(b);
+            return get<1>(a) < get<1>(b);
+        });
+        for (auto &e : ev) {
+            int t = get<0>(e);
+            int pr = get<1>(e);
+            string type = get<2>(e);
+            string param = get<3>(e);
+            for (int i = 0; i < numberOfUsers; ++i)
+                if (offlineUntil[i] <= t) offlineUntil[i] = 0;
+            if (pr == 0) {
+                int id = stoi(param);
+                offlineUntil[id] = t + 60;
+            } else {
+                if (param == "ALL") {
+                    for (int i = 0; i < numberOfUsers; ++i) mentions[i]++;
+                } else if (param == "HERE") {
+                    for (int i = 0; i < numberOfUsers; ++i)
+                        if (offlineUntil[i] == 0) mentions[i]++;
+                } else {
+                    stringstream ss(param);
+                    string tok;
+                    while (ss >> tok) {
+                        int id = stoi(tok.substr(2));
+                        mentions[id]++;
+                    }
+                }
+            }
+        }
+        return mentions;
+    }
+};
