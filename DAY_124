@@ -16,7 +16,7 @@ For every gap between the 2nd seat of one pair and the 1st seat of the next pair
 You can place a divider in (plants + 1) positions
 
 Multiply all such choices
-
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 class Solution {
 public:
