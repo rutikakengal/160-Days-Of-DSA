@@ -17,7 +17,23 @@ You can place a divider in (plants + 1) positions
 
 Multiply all such choices
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Algorithm Steps
 
+Count total 'S'
+
+If totalSeats == 0 or totalSeats % 2 != 0 → return 0
+
+Traverse the corridor:
+
+Track seat count
+
+When finishing a pair (2 seats), start counting plants
+
+When the next seat starts a new pair, multiply answer by (plants + 1)
+
+Return result modulo 1e9 + 7
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Solution {
 public:
     int numberOfWays(string corridor) {
