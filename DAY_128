@@ -1,0 +1,36 @@
+# 3652. Best Time to Buy and Sell Stock using Strategy 
+
+class Solution {
+public:
+    long long maxProfit(vector<int>& prices, vector<int>& strategy, int k) {
+        int n = prices.size();
+        long long base = 0;
+        
+        for (int i = 0; i < n; i++)
+            base += 1LL * strategy[i] * prices[i];
+
+        vector<long long> loss(n), gain(n);
+        for (int i = 0; i < n; i++) {
+            loss[i] = -1LL * strategy[i] * prices[i];
+            gain[i] = 1LL * (1 - strategy[i]) * prices[i];
+        }
+
+        vector<long long> preLoss(n + 1, 0), preGain(n + 1, 0);
+        for (int i = 0; i < n; i++) {
+            preLoss[i + 1] = preLoss[i] + loss[i];
+            preGain[i + 1] = preGain[i] + gain[i];
+        }
+
+        long long bestDelta = 0;
+        int half = k / 2;
+
+        for (int l = 0; l + k <= n; l++) {
+            long long cur =
+                (preLoss[l + half] - preLoss[l]) +
+                (preGain[l + k] - preGain[l + half]);
+            bestDelta = max(bestDelta, cur);
+        }
+
+        return base + bestDelta;
+    }
+};
