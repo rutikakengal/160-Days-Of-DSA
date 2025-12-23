@@ -1,2 +1,27 @@
 # 2054. Two Best Non-Overlapping Events
 
+🔑 Key Idea
+
+1. You can attend at most two events
+2. Events must not overlap
+3. Sort events by start time
+4. Use a priority queue to track events that have already ended
+5. Keep track of the maximum value of past non-overlapping events
+
+🧠 Approach
+
+1. Sort events by start time
+Use a min-heap (by end time)
+
+Maintain best = max value of completed events so far
+
+For each event:
+
+Remove all events that end before current start
+
+Update best
+
+Try combining current event with best
+
+Push current event into heap
+
