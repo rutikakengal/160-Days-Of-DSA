@@ -11,17 +11,14 @@
 🧠 Approach
 
 1. Sort events by start time
-Use a min-heap (by end time)
-
-Maintain best = max value of completed events so far
+2. Use a min-heap (by end time)
+3. Maintain best = max value of completed events so far
 
 For each event:
 
-Remove all events that end before current start
-
-Update best
-
-Try combining current event with best
+1. Remove all events that end before current start
+2. Update best
+3. Try combining current event with best
 
 Push current event into heap
 
